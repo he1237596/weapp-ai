@@ -1,0 +1,74 @@
+.task-list {
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+.header {
+  background: white;
+  padding: 20px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  .title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .add-btn {
+    background: #667eea;
+    
+    &::after {
+      border: none;
+    }
+  }
+}
+
+.content {
+  padding: 16px;
+  
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    
+    .empty-title {
+      display: block;
+      font-size: 18px;
+      color: #666;
+      margin: 20px 0 10px;
+    }
+    
+    .empty-desc {
+      display: block;
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 30px;
+    }
+    
+    .empty-btn {
+      background: #667eea;
+      
+      &::after {
+        border: none;
+      }
+    }
+  }
+}
+
+.fab-btn {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  background: #667eea;
+  border: none;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  z-index: 1000;
+  
+  &::after {
+    border: none;
+  }
+}

@@ -1,0 +1,135 @@
+.community {
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+.search-bar {
+  background: white;
+  margin-bottom: 10px;
+}
+
+.community-tabs {
+  background: white;
+}
+
+.content {
+  padding: 20px 16px;
+  
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    
+    .empty-title {
+      display: block;
+      font-size: 18px;
+      color: #666;
+      margin: 20px 0 10px;
+    }
+    
+    .empty-desc {
+      display: block;
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 30px;
+    }
+    
+    .empty-btn {
+      background: #667eea;
+      
+      &::after {
+        border: none;
+      }
+    }
+  }
+}
+
+.posts-list {
+  .post-card {
+    margin-bottom: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      
+      .author-info {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        
+        .author-details {
+          margin-left: 12px;
+          
+          .author-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            display: block;
+          }
+          
+          .create-time {
+            font-size: 12px;
+            color: #888;
+            display: block;
+            margin-top: 4px;
+          }
+        }
+      }
+    }
+    
+    .post-content {
+      margin: 16px 0;
+      
+      .post-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        display: block;
+        margin-bottom: 8px;
+      }
+      
+      .post-desc {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+        display: block;
+        margin-bottom: 12px;
+      }
+      
+      .post-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+    }
+    
+    .post-actions {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      
+      .action-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 16px;
+        border-radius: 20px;
+        background: #f5f5f5;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          background: #e8f4fd;
+        }
+        
+        text {
+          font-size: 12px;
+          color: #666;
+        }
+      }
+    }
+  }
+}

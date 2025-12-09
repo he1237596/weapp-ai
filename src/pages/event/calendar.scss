@@ -1,0 +1,218 @@
+.event-calendar {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 16px;
+
+  .calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 0 16px;
+
+    .nav-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: white;
+      border: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+
+      .nav-arrow {
+        font-size: 20px;
+        color: #333;
+      }
+    }
+
+    .month-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+  }
+
+  .weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 8px;
+
+    .weekday {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+      padding: 8px;
+    }
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    background: white;
+    border-radius: 12px;
+    padding: 8px;
+
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &.current-month {
+        background: #fafafa;
+
+        &:hover {
+          background: #f0f0f0;
+        }
+      }
+
+      &.other-month {
+        .day-number {
+          color: #ccc;
+        }
+      }
+
+      &.today {
+        background: #e3f2fd;
+        
+        .day-number {
+          color: #1976d2;
+          font-weight: 600;
+        }
+      }
+
+      &.has-events {
+        .day-number {
+          font-weight: 600;
+        }
+      }
+
+      .day-number {
+        font-size: 14px;
+        color: #333;
+        line-height: 1;
+      }
+
+      .event-indicator {
+        position: absolute;
+        bottom: 2px;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+
+        .event-dot {
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+        }
+
+        .event-count {
+          font-size: 10px;
+          color: #666;
+          line-height: 1;
+        }
+      }
+    }
+  }
+
+  .selected-events {
+    margin-top: 20px;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+
+    .selected-header {
+      margin-bottom: 16px;
+
+      .selected-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+      }
+    }
+
+    .event-list {
+      .event-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .event-priority {
+          width: 4px;
+          height: 40px;
+          border-radius: 2px;
+          background: #ccc;
+        }
+
+        .event-content {
+          flex: 1;
+
+          .event-title {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+            display: block;
+          }
+
+          .event-type {
+            font-size: 12px;
+            color: #999;
+          }
+        }
+
+        .view-task-btn {
+          background: #007AFF;
+          color: white;
+          border: none;
+          padding: 6px 12px;
+          border-radius: 4px;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .no-events {
+      text-align: center;
+      padding: 40px 0;
+      color: #999;
+      font-size: 14px;
+    }
+  }
+
+  .calendar-tips {
+    margin-top: 20px;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    text-align: center;
+
+    .tips-text {
+      font-size: 14px;
+      color: #666;
+    }
+  }
+
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    font-size: 16px;
+    color: #666;
+  }
+}

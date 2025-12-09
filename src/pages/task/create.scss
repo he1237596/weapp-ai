@@ -1,0 +1,37 @@
+.task-create {
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+.header {
+  background: white;
+  padding: 20px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+}
+
+.content {
+  padding: 40px 16px;
+  
+  .empty-state {
+    text-align: center;
+    
+    .empty-text {
+      display: block;
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    
+    .event-info {
+      display: block;
+      font-size: 14px;
+      color: #888;
+    }
+  }
+}

@@ -1,0 +1,111 @@
+.profile {
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+.user-card {
+  margin-bottom: 16px;
+  
+  .user-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    
+    .user-info {
+      flex: 1;
+      
+      .user-name {
+        display: block;
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 4px;
+      }
+      
+      .user-phone, .user-email {
+        display: block;
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 2px;
+      }
+    }
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+  
+  .grid-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    
+    .grid-text {
+      display: block;
+      font-size: 14px;
+      color: #666;
+      margin: 8px 0 4px 0;
+    }
+    
+    .grid-value {
+      display: block;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+  }
+}
+
+.logout-section {
+  padding: 40px 16px;
+  text-align: center;
+  
+  .logout-btn {
+    width: 200px;
+    margin: 0 auto;
+    
+    .at-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+  }
+}
+
+.header {
+  background: white;
+  padding: 20px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+}
+
+.content {
+  padding: 40px 16px;
+  
+  .empty-state {
+    text-align: center;
+    
+    .empty-text {
+      display: block;
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    
+    .desc {
+      display: block;
+      font-size: 14px;
+      color: #888;
+    }
+  }
+}

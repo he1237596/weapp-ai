@@ -1,0 +1,151 @@
+.expense-detail {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: 16px;
+}
+
+.loading, .error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  color: #666;
+  font-size: 16px;
+}
+
+.amount-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 32px 20px;
+  margin-bottom: 24px;
+  text-align: center;
+  color: white;
+  
+  .amount {
+    display: block;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .category {
+    display: block;
+    font-size: 16px;
+    opacity: 0.9;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 16px;
+    display: inline-block;
+  }
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  
+  .section-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 16px;
+  }
+}
+
+.info-section {
+  .info-list {
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      .label {
+        font-size: 14px;
+        color: #666;
+        min-width: 80px;
+      }
+      
+      .value {
+        font-size: 14px;
+        color: #333;
+        text-align: right;
+        flex: 1;
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
+.attachments-section {
+  .attachments {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    
+    .attachment-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      
+      .attachment-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 6px;
+        background: white;
+      }
+      
+      .attachment-name {
+        flex: 1;
+        font-size: 14px;
+        color: #333;
+      }
+    }
+  }
+}
+
+.actions-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+  
+  .action-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: bold;
+    
+    &::after {
+      border: none;
+    }
+    
+    &.primary {
+      background: #667eea;
+      color: white;
+    }
+    
+    &.secondary {
+      background: #f8f9fa;
+      color: #667eea;
+      border: 1px solid #667eea;
+    }
+    
+    &.danger {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #dc2626;
+    }
+  }
+}

@@ -1,0 +1,242 @@
+.event-detail {
+  min-height: 100vh;
+  background: #f8f9fa;
+
+  // 顶部栏
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: #fff;
+    box-shadow: 0 1px 0 #f0f0f0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    .back-btn {
+      background: transparent;
+      border: none;
+      padding: 8px;
+      
+      .arrow {
+        font-size: 24px;
+        color: #333;
+      }
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      flex: 1;
+      text-align: center;
+    }
+
+    .header-actions {
+      width: 40px;
+    }
+  }
+
+  // 封面区域
+  .cover-section {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+
+    .cover-image {
+      width: 100%;
+      height: 100%;
+    }
+
+    .cover-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+
+      .change-text {
+        color: #fff;
+        font-size: 14px;
+      }
+    }
+
+    &:active {
+      .cover-overlay {
+        opacity: 1;
+      }
+    }
+  }
+
+  // 概览卡片
+  .overview-card {
+    background: #fff;
+    margin: 16px 24px;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    .progress-section {
+      margin-bottom: 24px;
+
+      .progress-label {
+        display: block;
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 12px;
+        font-weight: 500;
+      }
+
+      .progress-bar {
+        display: flex;
+        align-items: center;
+        height: 8px;
+        background: #f0f0f0;
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
+
+        .progress-fill {
+          height: 100%;
+          background: #ff2442;
+          border-radius: 4px;
+          transition: width 0.3s ease;
+        }
+
+        .progress-text {
+          position: absolute;
+          right: 0;
+          top: -20px;
+          font-size: 14px;
+          color: #ff2442;
+          font-weight: 600;
+        }
+      }
+    }
+
+    .budget-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+
+      .budget-item {
+        text-align: center;
+
+        .budget-label {
+          display: block;
+          font-size: 14px;
+          color: #666;
+          margin-bottom: 4px;
+        }
+
+        .budget-value {
+          font-size: 18px;
+          font-weight: 600;
+          color: #333;
+          display: block;
+
+          &.spent {
+            color: #ff9500;
+          }
+
+          &.remaining {
+            color: #34c759;
+          }
+        }
+      }
+    }
+  }
+
+  // Tab 容器
+  .tab-container {
+    background: #fff;
+    margin: 0 24px 16px;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    .tabs {
+      display: flex;
+      gap: 12px;
+
+      .tab-btn {
+        flex: 1;
+        height: 44px;
+        background: #f8f9fa;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        color: #666;
+        font-weight: 500;
+
+        &:active {
+          background: #ff2442;
+          color: #fff;
+          transform: scale(0.98);
+        }
+      }
+    }
+  }
+
+  // 快速统计
+  .quick-stats {
+    background: #fff;
+    margin: 0 24px 24px;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    .stats-title {
+      display: block;
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+
+      .stat-card {
+        text-align: center;
+        padding: 16px;
+        background: #f8f9fa;
+        border-radius: 12px;
+
+        .stat-number {
+          display: block;
+          font-size: 24px;
+          font-weight: 700;
+          color: #ff2442;
+          margin-bottom: 4px;
+        }
+
+        .stat-label {
+          font-size: 14px;
+          color: #666;
+        }
+      }
+    }
+  }
+
+  .loading, .error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    
+    text {
+      font-size: 16px;
+      color: #999;
+    }
+  }
+}

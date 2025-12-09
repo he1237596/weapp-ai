@@ -1,0 +1,201 @@
+.event-tasks {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  padding-bottom: 80px;
+
+  // 玻璃态效果容器
+  .glass-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    margin: 16px;
+    overflow: hidden;
+  }
+
+  // 空状态样式
+  .empty-state {
+    text-align: center;
+    padding: 60px 40px;
+    color: #fff;
+
+    .empty-text {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 16px;
+      margin: 20px 0;
+    }
+  }
+
+  // 任务列表样式
+  .task-list {
+    padding: 16px;
+
+    .at-timeline {
+      background: transparent;
+
+      .at-timeline-item {
+        .at-timeline-item__content {
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 12px;
+          padding: 16px;
+          margin-bottom: 12px;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+          }
+        }
+      }
+    }
+  }
+
+  // 内容区域
+  .content {
+    padding: 16px 24px;
+
+    .placeholder-text {
+      text-align: center;
+      font-size: 16px;
+      color: #999;
+      padding: 60px 0;
+    }
+  }
+
+  // 流程列表
+  .process-list {
+    .process-item {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      transition: all 0.2s ease;
+
+      &:active {
+        transform: scale(0.98);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      }
+
+      .process-main {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .process-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex: 1;
+
+          .process-icon {
+            font-size: 24px;
+          }
+
+          .process-info {
+            flex: 1;
+
+            .process-title {
+              font-size: 16px;
+              font-weight: 600;
+              color: #333;
+              display: block;
+              margin-bottom: 8px;
+            }
+
+            .process-meta {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+
+              .process-status {
+                font-size: 14px;
+                padding: 4px 8px;
+                border-radius: 4px;
+
+                &.pending {
+                  background: #f0f0f0;
+                  color: #666;
+                }
+
+                &.doing {
+                  background: #fff3cd;
+                  color: #ff9500;
+                }
+
+                &.completed {
+                  background: #d4edda;
+                  color: #28a745;
+                }
+              }
+
+              .process-cost {
+                font-size: 14px;
+                color: #666;
+              }
+            }
+          }
+        }
+
+        .arrow {
+          font-size: 16px;
+          color: #ccc;
+        }
+      }
+
+      .process-description {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #f0f0f0;
+
+        text {
+          font-size: 14px;
+          color: #666;
+          line-height: 1.5;
+        }
+      }
+    }
+  }
+
+  // 悬浮按钮
+  .fab {
+    position: fixed;
+    right: 24px;
+    bottom: 100px;
+    width: 56px;
+    height: 56px;
+    border-radius: 28px;
+    background: #ff2442;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(255, 36, 66, 0.3);
+    z-index: 999;
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    .fab-text {
+      font-size: 24px;
+      font-weight: 300;
+      color: #fff;
+      line-height: 1;
+    }
+  }
+
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    
+    text {
+      font-size: 16px;
+      color: #999;
+    }
+  }
+}

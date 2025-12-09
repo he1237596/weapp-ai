@@ -1,0 +1,189 @@
+.event-expenses {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding-bottom: 80px;
+
+  // 预算进度条
+  .budget-progress {
+    background: #fff;
+    margin: 16px 24px;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    .progress-title {
+      display: block;
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 16px;
+    }
+
+    .progress-bar {
+      margin-bottom: 16px;
+    }
+
+    .progress-text {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      .spent {
+        font-size: 16px;
+        font-weight: 600;
+        color: #ff2442;
+      }
+
+      .separator {
+        color: #999;
+        font-size: 14px;
+      }
+
+      .total {
+        font-size: 16px;
+        color: #333;
+      }
+    }
+  }
+
+  // 图表区域
+  .chart-section {
+    background: #fff;
+    margin: 0 24px 16px;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    .section-title {
+      display: block;
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .pie-chart-text {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 16px;
+      
+      .category-item {
+        display: inline-block;
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 8px;
+        
+        &:not(:last-child) {
+          margin-right: 16px;
+        }
+      }
+    }
+  }
+
+  // 支出列表
+  .expense-list-section {
+    background: #fff;
+    margin: 0 24px 24px;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    .section-title {
+      display: block;
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .expense-list {
+      .expense-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .expense-label {
+          font-size: 16px;
+          color: #333;
+          flex: 1;
+        }
+
+        .expense-amount {
+          font-size: 16px;
+          font-weight: 600;
+          color: #ff2442;
+        }
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+
+        .empty-text {
+          font-size: 16px;
+          color: #999;
+          margin-bottom: 20px;
+          display: block;
+        }
+
+        .add-first-btn {
+          background: #ff2442;
+          color: #fff;
+          border: none;
+          border-radius: 12px;
+          padding: 12px 24px;
+          font-size: 16px;
+
+          &:active {
+            transform: scale(0.98);
+          }
+        }
+      }
+    }
+  }
+
+  // 悬浮按钮
+  .fab {
+    position: fixed;
+    right: 24px;
+    bottom: 100px;
+    width: 56px;
+    height: 56px;
+    border-radius: 28px;
+    background: #ff2442;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(255, 36, 66, 0.3);
+    z-index: 999;
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    .fab-text {
+      font-size: 24px;
+      font-weight: 300;
+      color: #fff;
+      line-height: 1;
+    }
+  }
+
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    
+    text {
+      font-size: 16px;
+      color: #999;
+    }
+  }
+}
