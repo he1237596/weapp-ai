@@ -1,0 +1,39 @@
+{
+  "name": "wedding-planner-api",
+  "version": "1.0.0",
+  "description": "Wedding Planner API Gateway with Cloudflare Workers",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy:dev": "wrangler deploy --env development",
+    "deploy:staging": "wrangler deploy --env staging", 
+    "deploy:prod": "wrangler deploy --env production",
+    "build": "tsc",
+    "test": "vitest",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src/**/*.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.86.0",
+    "itty-router": "^4.0.25"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231218.0",
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.0",
+    "wrangler": "^3.22.1",
+    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "prettier": "^3.1.1"
+  },
+  "keywords": [
+    "cloudflare-workers",
+    "supabase",
+    "api",
+    "wedding-planner"
+  ],
+  "author": "",
+  "license": "MIT"
+}

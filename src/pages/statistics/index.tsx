@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import { getExpenseCategoryLabel, formatMoney, calculatePercentage, formatDate } from '../../utils/common'
-import { EventStorage } from '../../utils/storage'
+import { useAuth } from '../../context/AuthContext'
+import { useStore } from '../../store/useStore'
+import { getExpenseCategoryLabel, formatMoney } from '../../utils/common'
 import { 
   AtCard,
   AtProgress,
@@ -10,18 +11,42 @@ import {
   AtList,
   AtListItem,
   AtTag,
-  AtDivider,
   AtTabs,
-  AtTabsPane,
   AtLoadMore,
   AtActivityIndicator
 } from 'taro-ui'
 import './index.scss'
 
+interface CategoryStats {
+  category: string
+  amount: number
+  percentage: number
+}
+
+interface MonthlyStats {
+  month: string
+  amount: number
+}
+
+interface StatsData {
+  totalBudget: number
+  totalExpense: number
+  categoryStats: CategoryStats[]
+  monthlyStats: MonthlyStats[]
+}
+
 const Statistics = () => {
-  const [event, setEvent] = useState(null)
+  const { requireAuth } = useAuth()
+  const { 
+    events, 
+    expenses,
+    loading: storeLoading,
+    loadExpenses
+  } = useStore()
+
   const [loading, setLoading] = useState(true)
-  const [stats, setStats] = useState({
+  const [selectedEventId, setSelectedEventId] = useState<string>('')
+  const [stats, setStats] = useState<StatsData>({
     totalBudget: 0,
     totalExpense: 0,
     categoryStats: [],
@@ -29,37 +54,99 @@ const Statistics = () => {
   })
 
   useEffect(() => {
-    loadStatistics()
+    requireAuth().then((authenticated) => {
+      if (authenticated) {
+        loadStatisticsData()
+      }
+    })
   }, [])
 
-  const loadStatistics = async () => {
+  useEffect(() => {
+    if (events.length > 0) {
+      if (!selectedEventId && events.length > 0) {
+        setSelectedEventId(events[0].id)
+      }
+      calculateStatistics()
+    }
+  }, [events, expenses, selectedEventId])
+
+  const loadStatisticsData = async () => {
     try {
-      // 使用 setTimeout 避免同步操作导致的超时问题
-      setTimeout(() => {
-        // 直接使用模拟数据，避免复杂的异步操作
-        setStats({
-          totalBudget: 100000,
-          totalExpense: 45000,
-          categoryStats: [
-            { category: 'venue', amount: 20000, percentage: 44.4 },
-            { category: 'catering', amount: 15000, percentage: 33.3 },
-            { category: 'decoration', amount: 10000, percentage: 22.2 }
-          ],
-          monthlyStats: [
-            { month: '2024-01', amount: 20000 },
-            { month: '2024-02', amount: 15000 },
-            { month: '2024-03', amount: 10000 }
-          ]
+      setLoading(true)
+      
+      // 加载所有事件的支出数据
+      const expensePromises = events.map(event => 
+        loadExpenses(event.id).catch(error => {
+          console.error(`加载事件 ${event.id} 支出失败:`, error)
+          return null
         })
-        setLoading(false)
-      }, 100)
+      )
+      
+      await Promise.all(expensePromises.filter(Boolean))
+      
+      setLoading(false)
     } catch (error) {
       console.error('加载统计数据失败:', error)
+      Taro.showToast({
+        title: '加载失败',
+        icon: 'error'
+      })
       setLoading(false)
     }
   }
 
-  if (loading) {
+  const calculateStatistics = () => {
+    if (!selectedEventId) return
+
+    const selectedEvent = events.find(event => event.id === selectedEventId)
+    if (!selectedEvent) return
+
+    // 筛选选中事件的支出
+    const eventExpenses = expenses.filter(expense => 
+      expense.eventId === selectedEventId
+    )
+
+    // 计算总支出和分类统计
+    const totalExpense = eventExpenses.reduce((sum, expense) => sum + expense.amount, 0)
+    
+    // 按分类统计
+    const categoryMap: { [key: string]: number } = {}
+    eventExpenses.forEach(expense => {
+      if (!categoryMap[expense.category]) {
+        categoryMap[expense.category] = 0
+      }
+      categoryMap[expense.category] += expense.amount
+    })
+
+    const categoryStats: CategoryStats[] = Object.entries(categoryMap).map(([category, amount]) => ({
+      category,
+      amount,
+      percentage: totalExpense > 0 ? Math.round((amount / totalExpense) * 100 * 10) / 10 : 0
+    })).sort((a, b) => b.amount - a.amount)
+
+    // 按月统计
+    const monthlyMap: { [key: string]: number } = {}
+    eventExpenses.forEach(expense => {
+      const month = expense.date ? expense.date.substring(0, 7) : 'unknown'
+      if (!monthlyMap[month]) {
+        monthlyMap[month] = 0
+      }
+      monthlyMap[month] += expense.amount
+    })
+
+    const monthlyStats: MonthlyStats[] = Object.entries(monthlyMap)
+      .map(([month, amount]) => ({ month, amount }))
+      .sort((a, b) => a.month.localeCompare(b.month))
+
+    setStats({
+      totalBudget: selectedEvent.budget || 0,
+      totalExpense,
+      categoryStats,
+      monthlyStats
+    })
+  }
+
+  if (loading || storeLoading) {
     return (
       <View className='statistics'>
         <AtActivityIndicator mode='center' content='加载中...' />
@@ -67,13 +154,55 @@ const Statistics = () => {
     )
   }
 
+  const { isAuthenticated } = useAuth()
+
+  if (!isAuthenticated) {
+    return (
+      <View className='statistics'>
+        <View className='auth-required'>
+          <AtIcon value='lock' size='64' color='#ccc' />
+          <Text className='auth-title'>请先登录</Text>
+          <Text className='auth-desc'>登录后查看统计数据</Text>
+        </View>
+      </View>
+    )
+  }
+
+  if (events.length === 0) {
+    return (
+      <View className='statistics'>
+        <View className='empty-state'>
+          <AtIcon value='bar-chart' size='64' color='#ccc' />
+          <Text className='empty-title'>暂无数据</Text>
+          <Text className='empty-desc'>创建事件后查看统计</Text>
+        </View>
+      </View>
+    )
+  }
+
+  const selectedEvent = events.find(event => event.id === selectedEventId)
+
   return (
     <View className='statistics'>
       <View className='header'>
         <Text className='title'>
-          {event ? `${event.title} - 统计` : '统计概览'}
+          {selectedEvent ? `${selectedEvent.title} - 统计` : '统计概览'}
         </Text>
       </View>
+
+      {/* 事件选择器 */}
+      {events.length > 1 && (
+        <View className='event-selector'>
+          <AtTabs
+            current={events.findIndex(event => event.id === selectedEventId)}
+            tabList={events.map(event => ({
+              title: event.title,
+              id: event.id
+            }))}
+            onClick={(value) => setSelectedEventId(events[value].id)}
+          />
+        </View>
+      )}
 
       <ScrollView className='content' scrollY>
         {/* 概览卡片 */}
@@ -94,6 +223,15 @@ const Statistics = () => {
                 <AtIcon value='credit-card' size='24' color='#52c41a' />
                 <Text className='grid-text'>剩余</Text>
                 <Text className='grid-value'>¥{formatMoney(stats.totalBudget - stats.totalExpense)}</Text>
+              </View>
+              <View className='grid-item'>
+                <AtIcon value='pie-chart' size='24' color='#fa8c16' />
+                <Text className='grid-text'>使用率</Text>
+                <Text className='grid-value'>
+                  {stats.totalBudget > 0 
+                    ? Math.round((stats.totalExpense / stats.totalBudget) * 100) 
+                    : 0}%
+                </Text>
               </View>
             </View>
           </View>

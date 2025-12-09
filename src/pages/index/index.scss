@@ -1,337 +1,357 @@
 .index {
   min-height: 100vh;
-  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  background: #f5f5f5;
   padding-bottom: 80px;
 
-  // Banner轮播
-  .banner-section {
-    padding: 16px 20px 0;
-    
-    .banner-swiper {
-      height: 160px;
-      border-radius: 16px;
-      overflow: hidden;
-      
-      .banner-item {
-        height: 160px;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        padding: 24px;
-        color: white;
-        position: relative;
-        overflow: hidden;
-        
-        &::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%);
-          pointer-events: none;
-        }
-        
-        .banner-icon {
-          font-size: 48px;
-          margin-bottom: 16px;
-          filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-        }
-        
-        .banner-text {
-          .banner-title {
-            display: block;
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-          }
-          
-          .banner-subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-          }
-        }
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+  }
+
+  .auth-required {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: 40px;
+
+    .auth-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      margin: 20px 0 10px;
+    }
+
+    .auth-desc {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+  }
+
+  .welcome-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 30px 20px;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+
+    .welcome-content {
+      .welcome-text {
+        font-size: 20px;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .welcome-date {
+        font-size: 14px;
+        opacity: 0.8;
+        display: block;
       }
     }
-  }
 
-  // 搜索区域
-  .search-section {
-    padding: 0 20px 16px;
-    
-    .search-bar {
-      border-radius: 25px;
-      overflow: hidden;
-    }
-  }
-
-  // 快捷功能
-  .quick-actions {
-    padding: 0 20px 16px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    margin-bottom: 16px;
-    border-radius: 16px;
-    
-    .quick-item {
+    .weather-info {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      padding: 16px 8px;
-      border-radius: 12px;
-      transition: all 0.3s ease;
-      
-      &:active {
-        transform: scale(0.95);
-        background: rgba(255, 255, 255, 0.2);
-      }
-      
-      text {
+      text-align: center;
+
+      .weather-text {
         font-size: 12px;
-        color: white;
-        font-weight: 500;
+        margin-top: 5px;
       }
     }
   }
 
-  // 统计区域
-  .stats-section {
-    padding: 0 20px 16px;
-    
-    .stats-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      
-      .stat-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 16px;
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        
-        &:active {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  .stats-card {
+    margin: -20px 20px 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    .stats-grid {
+      display: flex;
+      justify-content: space-around;
+
+      .stat-item {
+        text-align: center;
+        padding: 15px 10px;
+
+        .stat-number {
+          font-size: 18px;
+          font-weight: bold;
+          color: #333;
+          display: block;
+          margin-bottom: 5px;
         }
-        
-        &.ongoing {
-          background: linear-gradient(135deg, #ff6b6b20, #ff6b6b10);
-          border: 1px solid #ff6b6b30;
-        }
-        
-        &.planning {
-          background: linear-gradient(135deg, #f39c1220, #f39c1210);
-          border: 1px solid #f39c1230;
-        }
-        
-        &.completed {
-          background: linear-gradient(135deg, #27ae6020, #27ae6010);
-          border: 1px solid #27ae6030;
-        }
-        
-        &.total {
-          background: linear-gradient(135deg, #8e44ad20, #8e44ad10);
-          border: 1px solid #8e44ad30;
-        }
-        
-        .stat-info {
-          flex: 1;
-          
-          .stat-number {
-            display: block;
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 2px;
-            line-height: 1;
-          }
-          
-          .stat-label {
-            font-size: 12px;
-            color: #666;
-            font-weight: 500;
-          }
+
+        .stat-label {
+          font-size: 12px;
+          color: #666;
+          display: block;
         }
       }
     }
   }
 
-  // 事件列表区域
-  .event-list-section {
+  .search-section {
     padding: 0 20px;
-    
+    margin-bottom: 20px;
+  }
+
+  .events-section {
+    padding: 0 20px;
+
     .section-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
-      padding: 0 4px;
-      
+      align-items: center;
+      margin-bottom: 20px;
+
       .section-title {
         font-size: 18px;
-        font-weight: 700;
-        color: white;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        font-weight: bold;
+        color: #333;
       }
     }
-    
-    .event-list {
+
+    .events-list {
       .event-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        margin-bottom: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
+        margin-bottom: 15px;
+        border-radius: 12px;
         overflow: hidden;
-        
-        &:active {
-          transform: translateY(-3px);
-          box-shadow: 0 12px 30px rgba(0,0,0,0.2);
-          border-color: rgba(255, 255, 255, 0.4);
+        transition: all 0.3s ease;
+        cursor: pointer;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
         }
-        
-        .card-header {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          padding: 20px 20px 16px;
-          
-          .event-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
+
+        .event-content {
+          padding: 15px;
+
+          .event-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            
-            text {
-              font-size: 24px;
-              filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-            }
-          }
-          
-          .event-info {
-            flex: 1;
-            
-            .event-title {
-              font-size: 18px;
-              font-weight: 700;
-              color: #333;
-              margin-bottom: 8px;
-              line-height: 1.2;
-            }
-            
-            .event-tags {
-              margin-top: 4px;
-            }
-          }
-        }
-        
-        .card-content {
-          padding: 0 20px 20px;
-          
-          .progress-section {
-            margin-bottom: 16px;
-            
-            .progress-label {
-              font-size: 14px;
-              color: #666;
-              margin-bottom: 8px;
-              font-weight: 500;
-            }
-            
-            .progress-text {
-              font-size: 14px;
-              font-weight: 600;
-              color: #333;
-              margin-top: 8px;
-              text-align: right;
-            }
-          }
-          
-          .event-meta {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            
-            .meta-item {
+            margin-bottom: 15px;
+
+            .event-info {
               display: flex;
               align-items: center;
-              gap: 8px;
-              font-size: 14px;
-              color: #666;
-              font-weight: 500;
+              gap: 10px;
+
+              .event-icon {
+                font-size: 24px;
+              }
+
+              .event-title {
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+              }
             }
           }
-        }
-      }
-      
-      .more-btn {
-        width: 100%;
-        margin: 16px 0;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: white;
-        border-radius: 16px;
-        backdrop-filter: blur(10px);
-      }
-    }
-    
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      
-      .empty-title {
-        display: block;
-        font-size: 18px;
-        font-weight: 600;
-        color: white;
-        margin: 20px 0 8px;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-      }
-      
-      .empty-desc {
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.8);
-        margin-bottom: 24px;
-        line-height: 1.4;
-      }
-      
-      .empty-btn {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border: none;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        
-        &:active {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+
+          .event-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+
+            .event-date, .event-budget {
+              font-size: 14px;
+              color: #666;
+            }
+          }
+
+          .event-progress {
+            .progress-text {
+              font-size: 12px;
+              color: #666;
+              display: block;
+              margin-bottom: 8px;
+            }
+          }
         }
       }
     }
   }
 
-  // 悬浮按钮
-  .at-fab {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-    border: none;
-    
-    &:active {
-      transform: scale(0.95);
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 40vh;
+    padding: 40px;
+
+    .empty-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin: 20px 0 10px;
+    }
+
+    .empty-desc {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 30px;
+      text-align: center;
     }
   }
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .index {
+    .welcome-banner {
+      padding: 20px 15px;
+      flex-direction: column;
+      text-align: center;
+      gap: 15px;
+
+      .weather-info {
+        order: -1;
+      }
+    }
+
+    .stats-card {
+      margin: -15px 15px 15px;
+
+      .stats-grid {
+        .stat-item {
+          padding: 12px 8px;
+
+          .stat-number {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+
+    .search-section {
+      padding: 0 15px;
+    }
+
+    .events-section {
+      padding: 0 15px;
+    }
+  }
+}
+
+/* 暗色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .index {
+    background: #1a1a1a;
+
+    .auth-required {
+      .auth-title {
+        color: white;
+      }
+
+      .auth-desc {
+        color: #ccc;
+      }
+    }
+
+    .stats-card {
+      .stats-grid {
+        .stat-item {
+          .stat-number {
+            color: white;
+          }
+
+          .stat-label {
+            color: #ccc;
+          }
+        }
+      }
+    }
+
+    .events-section {
+      .section-header {
+        .section-title {
+          color: white;
+        }
+      }
+
+      .events-list {
+        .event-card {
+          background: #2a2a2a;
+
+          .event-content {
+            .event-header {
+              .event-info {
+                .event-title {
+                  color: white;
+                }
+              }
+            }
+
+            .event-details {
+              .event-date, .event-budget {
+                color: #ccc;
+              }
+            }
+
+            .event-progress {
+              .progress-text {
+                color: #ccc;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .empty-state {
+      .empty-title {
+        color: white;
+      }
+
+      .empty-desc {
+        color: #ccc;
+      }
+    }
+  }
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.event-card {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* 悬浮按钮动画 */
+.at-fab {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+/* 加载状态优化 */
+.at-activity-indicator {
+  backdrop-filter: blur(2px);
 }

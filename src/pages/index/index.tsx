@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { View, Text, Swiper, SwiperItem } from '@tarojs/components'
-import Taro, { useDidShow } from '@tarojs/taro'
+import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro'
 import { 
   AtCard, 
   AtButton, 
@@ -10,350 +10,413 @@ import {
   AtTag,
   AtProgress,
   AtNoticebar,
-  AtGrid
+  AtGrid,
+  AtDivider,
+  AtLoadMore,
+  AtActivityIndicator
 } from 'taro-ui'
+import { useAuth } from '../../context/AuthContext'
+import { useStore } from '../../store/useStore'
+import { formatMoney, formatDate } from '../../utils/common'
 import './index.scss'
-import { Event } from '../../types'
 
 const Index = () => {
-  const [events, setEvents] = useState([])
+  const { user, isAuthenticated, requireAuth } = useAuth()
+  const { 
+    events, 
+    loading: eventsLoading,
+    loadEvents,
+    setCurrentEvent,
+    createEvent,
+    loadTasks,
+    loadExpenses
+  } = useStore()
+
   const [searchKeyword, setSearchKeyword] = useState('')
-
-  useEffect(() => {
-    loadEvents()
-  }, [])
-
-  useDidShow(() => {
-    loadEvents()
+  const [refreshing, setRefreshing] = useState(false)
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [quickStats, setQuickStats] = useState({
+    totalEvents: 0,
+    totalBudget: 0,
+    totalExpenses: 0,
+    upcomingEvents: 0
   })
 
-  const loadEvents = async () => {
+  // 加载首页数据
+  const loadIndexData = async () => {
+    if (!isAuthenticated) {
+      return
+    }
+
     try {
-      // 模拟数据，实际应该从存储加载
-      const mockEvents = [
-        {
-          id: '1',
-          title: '婚礼准备',
-          icon: '💍',
-          progress: 40,
-          startDate: '2025-02-01',
-          budget: 56000,
-          status: 'ongoing'
-        },
-        {
-          id: '2', 
-          title: '新房装修',
-          icon: '🏠',
-          progress: 12,
-          startDate: '2025-03-10',
-          budget: 140000,
-          status: 'planning'
-        },
-        {
-          id: '3',
-          title: '毕业旅行',
-          icon: '✈️',
-          progress: 65,
-          startDate: '2025-06-01',
-          budget: 25000,
-          status: 'ongoing'
-        }
-      ]
-      setEvents(mockEvents)
+      await loadEvents()
+      calculateQuickStats()
     } catch (error) {
-      console.error('加载事件失败:', error)
+      console.error('加载数据失败:', error)
+      Taro.showToast({
+        title: '加载失败',
+        icon: 'error'
+      })
     }
   }
 
+  // 计算快速统计
+  const calculateQuickStats = () => {
+    const stats = {
+      totalEvents: events.length,
+      totalBudget: events.reduce((sum, event) => sum + (event.budget || 0), 0),
+      totalExpenses: 0, // 这里可以后续实现支出统计
+      upcomingEvents: events.filter(event => {
+        const eventDate = new Date(event.start_date)
+        const today = new Date()
+        const daysUntil = Math.ceil((eventDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+        return daysUntil > 0 && daysUntil <= 30
+      }).length
+    }
+    setQuickStats(stats)
+  }
+
+  // 处理搜索
   const handleSearch = (value: string) => {
     setSearchKeyword(value)
+    // 这里可以实现搜索逻辑
   }
 
-  const navigateToCreate = () => {
-    Taro.navigateTo({
-      url: '/pages/event/create'
+  // 处理下拉刷新
+  usePullDownRefresh(async () => {
+    setRefreshing(true)
+    await loadIndexData()
+    setRefreshing(false)
+    Taro.stopPullDownRefresh()
+  })
+
+  // 页面显示时加载数据
+  useDidShow(() => {
+    requireAuth().then((authenticated) => {
+      if (authenticated) {
+        loadIndexData()
+      }
     })
-  }
+  })
 
-  const navigateToDetail = (eventId) => {
-    Taro.navigateTo({
-      url: `/pages/event/detail?id=${eventId}`
-    })
-  }
-
-  const formatMoney = (amount) => {
-    return new Intl.NumberFormat('zh-CN').format(amount)
-  }
-
-  const getEventColor = (status) => {
-    const colors = {
-      'ongoing': '#ff6b6b',
-      'planning': '#f39c12', 
-      'completed': '#27ae60'
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadIndexData()
     }
-    return colors[status] || '#666'
+  }, [isAuthenticated])
+
+  useEffect(() => {
+    calculateQuickStats()
+  }, [events])
+
+  // 快速创建事件
+  const handleQuickCreateEvent = async (eventType: string) => {
+    try {
+      const eventData = {
+        title: getEventTitleByType(eventType),
+        icon: getEventIconByType(eventType),
+        start_date: new Date().toISOString().split('T')[0],
+        budget: getDefaultBudgetByType(eventType),
+        status: 'planning'
+      }
+
+      await createEvent(eventData)
+      
+      Taro.showToast({
+        title: '创建成功',
+        icon: 'success'
+      })
+      
+      await loadEvents()
+    } catch (error) {
+      console.error('创建事件失败:', error)
+      Taro.showToast({
+        title: '创建失败',
+        icon: 'error'
+      })
+    }
   }
 
-  // 过滤事件
-  const filteredEvents = events.filter(event => 
-    event.title.toLowerCase().includes(searchKeyword.toLowerCase())
-  )
+  const getEventTitleByType = (type: string): string => {
+    const titles: { [key: string]: string } = {
+      wedding: '婚礼筹备',
+      birthday: '生日派对',
+      meeting: '商务会议',
+      travel: '旅行计划'
+    }
+    return titles[type] || '新事件'
+  }
 
-  // Banner轮播数据
-  const bannerList = [
+  const getEventIconByType = (type: string): string => {
+    const icons: { [key: string]: string } = {
+      wedding: '💒',
+      birthday: '🎂',
+      meeting: '💼',
+      travel: '✈️'
+    }
+    return icons[type] || '📅'
+  }
+
+  const getDefaultBudgetByType = (type: string): number => {
+    const budgets: { [key: string]: number } = {
+      wedding: 100000,
+      birthday: 5000,
+      meeting: 10000,
+      travel: 20000
+    }
+    return budgets[type] || 10000
+  }
+
+  // 跳转到事件详情
+  const handleEventClick = async (event: any) => {
+    setCurrentEvent(event)
+    
+    // 加载事件相关的任务和支出
+    try {
+      await Promise.all([
+        loadTasks(event.id),
+        loadExpenses(event.id)
+      ])
+    } catch (error) {
+      console.error('加载事件数据失败:', error)
+    }
+    
+    Taro.navigateTo({
+      url: `/pages/event/detail?id=${event.id}`
+    })
+  }
+
+  // 快速操作按钮
+  const quickActions = [
     {
-      title: '婚礼策划',
-      subtitle: '打造完美婚礼',
-      image: '💒',
+      title: '婚礼筹备',
+      icon: '💒',
+      type: 'wedding',
       color: '#ff6b6b'
     },
     {
-      title: '预算管理', 
-      subtitle: '合理规划开支',
-      image: '💰',
+      title: '生日派对',
+      icon: '🎂',
+      type: 'birthday',
       color: '#4ecdc4'
     },
     {
-      title: '任务追踪',
-      subtitle: '不错过每个细节',
-      image: '📋',
+      title: '商务会议',
+      icon: '💼',
+      type: 'meeting',
       color: '#45b7d1'
+    },
+    {
+      title: '旅行计划',
+      icon: '✈️',
+      type: 'travel',
+      color: '#96ceb4'
     }
   ]
 
-  return (
-    <View className='index'>
-      {/* 顶部通知栏 */}
-      <AtNoticebar 
-        icon='volume-plus' 
-        speed={100}
-        marquee>
-        欢迎使用婚礼策划助手！让每一个重要时刻都完美呈现 ✨
-      </AtNoticebar>
+  // 筛选后的事件列表
+  const filteredEvents = events.filter(event =>
+    event.title.toLowerCase().includes(searchKeyword.toLowerCase())
+  )
 
-      {/* Banner轮播 */}
-      <View className='banner-section'>
-        <Swiper
-          className='banner-swiper'
-          indicatorColor='rgba(255,255,255,0.6)'
-          indicatorDots
-          autoplay
-          interval={3000}
-          circular
-        >
-          {bannerList.map((banner, index) => (
-            <SwiperItem key={index}>
-              <View 
-                className='banner-item' 
-                style={{ background: `linear-gradient(135deg, ${banner.color}dd, ${banner.color})` }}
-              >
-                <Text className='banner-icon'>{banner.image}</Text>
-                <View className='banner-text'>
-                  <Text className='banner-title'>{banner.title}</Text>
-                  <Text className='banner-subtitle'>{banner.subtitle}</Text>
-                </View>
-              </View>
-            </SwiperItem>
-          ))}
-        </Swiper>
-      </View>
-
-      {/* 搜索框 */}
-      <View className='search-section'>
-          <AtSearchBar
-          value={searchKeyword}
-          onChange={handleSearch}
-          onActionClick={() => handleSearch(searchKeyword)}
-          placeholder='搜索你的事件...'
-          className='search-bar'
-        />
-      </View>
-
-      {/* 快捷功能网格 */}
-      <View className='quick-actions'>
-        <AtGrid 
-          columnNum={4} 
-          hasBorder={false}
-          mode='rect'
-          data={[
-            {
-              image: '',
-              value: 'create',
-              icon: 'add',
-              text: '创建',
-              iconColor: '#ff6b6b',
-              onClick: navigateToCreate
-            },
-            {
-              image: '',
-              value: 'statistics',
-              icon: 'bookmark',
-              text: '统计', 
-              iconColor: '#4ecdc4',
-              onClick: () => Taro.navigateTo({ url: '/pages/statistics/index' })
-            },
-            {
-              image: '',
-              value: 'template',
-              icon: 'download',
-              text: '模板',
-              iconColor: '#45b7d1',
-              onClick: () => Taro.navigateTo({ url: '/pages/template/list' })
-            },
-            {
-              image: '',
-              value: 'community',
-              icon: 'link',
-              text: '社区',
-              iconColor: '#9b59b6', 
-              onClick: () => Taro.navigateTo({ url: '/pages/community/index' })
-            }
-          ]}
-        />
-      </View>
-
-      {/* 事件统计卡片 */}
-      <View className='stats-section'>
-        <AtCard
-          title='📊 数据概览'
-        >
-          <View className='stats-content'>
-            <View className='stat-card ongoing'>
-              <AtIcon value='play-circle' size='20' color='#ff6b6b' />
-              <View className='stat-info'>
-                <Text className='stat-number'>3</Text>
-                <Text className='stat-label'>进行中</Text>
-              </View>
-            </View>
-            <View className='stat-card planning'>
-              <AtIcon value='clock' size='20' color='#f39c12' />
-              <View className='stat-info'>
-                <Text className='stat-number'>2</Text>
-                <Text className='stat-label'>计划中</Text>
-              </View>
-            </View>
-            <View className='stat-card completed'>
-              <AtIcon value='check-circle' size='20' color='#27ae60' />
-              <View className='stat-info'>
-                <Text className='stat-number'>5</Text>
-                <Text className='stat-label'>已完成</Text>
-              </View>
-            </View>
-            <View className='stat-card total'>
-              <AtIcon value='folder' size='20' color='#8e44ad' />
-              <View className='stat-info'>
-                <Text className='stat-number'>10</Text>
-                <Text className='stat-label'>总事件</Text>
-              </View>
-            </View>
-          </View>
-        </AtCard>
-      </View>
-
-      {/* 事件列表 */}
-      <View className='event-list-section'>
-        <View className='section-header'>
-          <Text className='section-title'>📝 最近事件</Text>
+  if (!isAuthenticated) {
+    return (
+      <View className='index'>
+        <View className='auth-required'>
+          <AtIcon value='user' size='64' color='#ccc' />
+          <Text className='auth-title'>请先登录</Text>
+          <Text className='auth-desc'>登录后使用完整功能</Text>
           <AtButton 
-            size='small' 
-            type='secondary'
-            onClick={() => Taro.navigateTo({ url: '/pages/event/list' })}
+            type='primary'
+            onClick={() => Taro.navigateTo({ url: '/pages/login/index' })}
           >
-            查看全部
+            去登录
           </AtButton>
         </View>
+      </View>
+    )
+  }
 
-        <View className='event-list'>
-          {filteredEvents.length === 0 ? (
-            <View className='empty-state'>
-              <AtIcon value='folder-open' size='80' color='#ddd' />
-              <Text className='empty-title'>
-                {searchKeyword ? '没有找到相关事件' : '还没有创建事件'}
-              </Text>
-              <Text className='empty-desc'>
-                {searchKeyword ? '试试其他关键词' : '创建你的第一个重要事件吧'}
-              </Text>
-              <AtButton 
-                type='primary' 
-                size='normal'
-                onClick={navigateToCreate}
-                className='empty-btn'
-                circle
-              >
-                <AtIcon value='add' size='16' color='#fff' />
-                <Text>立即创建</Text>
-              </AtButton>
-            </View>
-          ) : (
-            <>
-              {filteredEvents.slice(0, 3).map((event, index) => (
-                <AtCard
-                  key={event.id}
-                  className='event-card'
-                  onClick={() => navigateToDetail(event.id)}
-                  title={event.title}
-                >
-                  <View className='card-header'>
-                    <View className='event-icon' style={{ background: `${getEventColor(event.status)}20` }}>
-                      <Text>{event.icon}</Text>
-                    </View>
-                    <View className='event-info'>
-                      <Text className='event-title'>{event.title}</Text>
-                      <View className='event-tags'>
-                        <AtTag 
-                          type={event.status === 'ongoing' ? 'primary' : ''}
-                          size='small'
-                        >
-                          {event.status === 'ongoing' ? '进行中' : event.status === 'planning' ? '计划中' : '已完成'}
-                        </AtTag>
-                      </View>
-                    </View>
-                    <AtIcon value='chevron-right' size='14' color='#ccc' />
-                  </View>
-                  <View className='card-content'>
-                    <View className='progress-section'>
-                      <Text className='progress-label'>完成进度</Text>
-                      <AtProgress 
-                        percent={event.progress} 
-                        strokeWidth={6}
-                        color={event.status === 'ongoing' ? '#ff6b6b' : event.status === 'planning' ? '#f39c12' : '#27ae60'}
-                      />
-                      <Text className='progress-text'>{event.progress}%</Text>
-                    </View>
-                    <View className='event-meta'>
-                      <View className='meta-item'>
-                        <AtIcon value='calendar' size='14' color='#666' />
-                        <Text>{event.startDate}</Text>
-                      </View>
-                      <View className='meta-item'>
-                        <AtIcon value='credit-card' size='14' color='#666' />
-                        <Text>¥{formatMoney(event.budget)}</Text>
-                      </View>
-                    </View>
-                  </View>
-                </AtCard>
-              ))}
-              {filteredEvents.length > 3 && (
-                <AtButton 
-                  type='secondary' 
-                  size='small' 
-                  onClick={() => Taro.navigateTo({ url: '/pages/event/list' })}
-                  className='more-btn'
-                >
-                  查看更多事件
-                </AtButton>
-              )}
-            </>
-          )}
+  if (eventsLoading && events.length === 0) {
+    return (
+      <View className='index'>
+        <View className='loading'>
+          <AtActivityIndicator mode='center' content='加载中...' />
+        </View>
+      </View>
+    )
+  }
+
+  return (
+    <View className='index'>
+      {/* 欢迎横幅 */}
+      <View className='welcome-banner'>
+        <View className='welcome-content'>
+          <Text className='welcome-text'>
+            欢迎回来，{user?.nickname || '用户'}！
+          </Text>
+          <Text className='welcome-date'>
+            {formatDate(new Date())}
+          </Text>
+        </View>
+        <View className='weather-info'>
+          <AtIcon value='cloud' size='32' color='#ffd93d' />
+          <Text className='weather-text'>今日宜策划</Text>
         </View>
       </View>
 
+      {/* 快速统计 */}
+      <AtCard className='stats-card'>
+        <View className='stats-grid'>
+          <View className='stat-item'>
+            <Text className='stat-number'>{quickStats.totalEvents}</Text>
+            <Text className='stat-label'>总事件</Text>
+          </View>
+          <View className='stat-item'>
+            <Text className='stat-number'>{quickStats.upcomingEvents}</Text>
+            <Text className='stat-label'>即将到来</Text>
+          </View>
+          <View className='stat-item'>
+            <Text className='stat-number'>¥{formatMoney(quickStats.totalBudget)}</Text>
+            <Text className='stat-label'>总预算</Text>
+          </View>
+          <View className='stat-item'>
+            <Text className='stat-number'>¥{formatMoney(quickStats.totalExpenses)}</Text>
+            <Text className='stat-label'>总支出</Text>
+          </View>
+        </View>
+      </AtCard>
+
+      {/* 搜索栏 */}
+      <View className='search-section'>
+        <AtSearchBar
+          value={searchKeyword}
+          onChange={handleSearch}
+          placeholder='搜索事件...'
+        />
+      </View>
+
+      {/* 快速操作 */}
+      {filteredEvents.length === 0 && (
+        <AtCard title='快速创建' note='选择模板快速开始'>
+          <AtGrid 
+            data={quickActions}
+            columnNum={2}
+            hasBorder={false}
+            onClick={(item) => handleQuickCreateEvent(item.type)}
+          />
+        </AtCard>
+      )}
+
+      {/* 事件列表 */}
+      {filteredEvents.length > 0 && (
+        <View className='events-section'>
+          <View className='section-header'>
+            <Text className='section-title'>我的事件</Text>
+            <AtButton 
+              size='small'
+              type='primary'
+              onClick={() => Taro.navigateTo({ url: '/pages/event/create' })}
+            >
+              <AtIcon value='add' size='14' color='#fff' />
+              新建
+            </AtButton>
+          </View>
+          
+          <View className='events-list'>
+            {filteredEvents.map((event) => (
+              <AtCard 
+                key={event.id}
+                className='event-card'
+                onClick={() => handleEventClick(event)}
+              >
+                <View className='event-content'>
+                  <View className='event-header'>
+                    <View className='event-info'>
+                      <Text className='event-icon'>{event.icon}</Text>
+                      <Text className='event-title'>{event.title}</Text>
+                    </View>
+                    <AtTag 
+                      type='primary' 
+                      size='small'
+                    >
+                      {getStatusText(event.status)}
+                    </AtTag>
+                  </View>
+                  
+                  <View className='event-details'>
+                    <Text className='event-date'>
+                      {formatDate(new Date(event.start_date))}
+                    </Text>
+                    <Text className='event-budget'>
+                      预算: ¥{formatMoney(event.budget || 0)}
+                    </Text>
+                  </View>
+                  
+                  <View className='event-progress'>
+                    <Text className='progress-text'>进度</Text>
+                    <AtProgress 
+                      percent={event.progress || 0} 
+                      strokeWidth={4}
+                      color='#1890ff'
+                      status='progress'
+                    />
+                  </View>
+                </View>
+              </AtCard>
+            ))}
+          </View>
+        </View>
+      )}
+
+      {/* 空状态 */}
+      {filteredEvents.length === 0 && (
+        <View className='empty-state'>
+          <AtIcon value='bookmark' size='64' color='#ccc' />
+          <Text className='empty-title'>
+            {searchKeyword ? '没有找到相关事件' : '还没有事件'}
+          </Text>
+          <Text className='empty-desc'>
+            {searchKeyword ? '尝试其他搜索关键词' : '创建你的第一个事件开始吧'}
+          </Text>
+          {!searchKeyword && (
+            <AtButton 
+              type='primary'
+              onClick={() => Taro.navigateTo({ url: '/pages/event/create' })}
+            >
+              创建事件
+            </AtButton>
+          )}
+        </View>
+      )}
+
       {/* 悬浮按钮 */}
-      <AtFab onClick={navigateToCreate}>
-        <AtIcon value='add' size='20' color='#fff' />
+      <AtFab
+        onClick={() => Taro.navigateTo({ url: '/pages/event/create' })}
+      >
+        <AtIcon value='add' size='24' color='#fff' />
       </AtFab>
+
+      {/* 加载更多 */}
+      {refreshing && (
+        <AtLoadMore 
+          moreText='正在刷新...'
+          status='loading'
+        />
+      )}
     </View>
   )
+}
+
+// 获取状态文本
+const getStatusText = (status: string): string => {
+  const statusMap: { [key: string]: string } = {
+    planning: '计划中',
+    ongoing: '进行中',
+    completed: '已完成',
+    cancelled: '已取消'
+  }
+  return statusMap[status] || status
 }
 
 export default Index

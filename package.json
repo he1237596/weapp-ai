@@ -36,7 +36,6 @@
   "author": "",
   "dependencies": {
     "@babel/runtime": "^7.7.7",
-    "@reduxjs/toolkit": "^2.11.0",
     "@supabase/supabase-js": "^2.86.0",
     "@tarojs/components": "3.6.23",
     "@tarojs/helper": "3.6.23",
@@ -49,15 +48,14 @@
     "@tarojs/plugin-platform-tt": "3.6.23",
     "@tarojs/plugin-platform-weapp": "3.6.23",
     "@tarojs/react": "3.6.23",
-    "@tarojs/redux": "^2.2.10",
     "@tarojs/router": "3.6.23",
     "@tarojs/runtime": "3.6.23",
     "@tarojs/shared": "3.6.23",
     "@tarojs/taro": "3.6.23",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-redux": "^9.2.0",
-    "taro-ui": "^3.3.0"
+    "taro-ui": "^3.3.0",
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@babel/core": "^7.8.0",

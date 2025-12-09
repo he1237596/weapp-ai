@@ -1,0 +1,339 @@
+.login {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px 20px;
+  box-sizing: border-box;
+
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    
+    .loading-text {
+      color: white;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+  }
+
+  .login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+    backdrop-filter: blur(10px);
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+
+      .logo {
+        margin-bottom: 20px;
+      }
+
+      .app-title {
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .app-subtitle {
+        font-size: 16px;
+        color: #666;
+        display: block;
+      }
+    }
+
+    .login-card, .signup-card {
+      margin-bottom: 20px;
+      border: none;
+      box-shadow: none;
+      background: transparent;
+
+      .at-form {
+        .at-input {
+          margin-bottom: 20px;
+          
+          .at-input__container {
+            border-radius: 10px;
+            border: 1px solid #e8e8e8;
+            background: white;
+            transition: all 0.3s ease;
+            
+            &:focus-within {
+              border-color: #1890ff;
+              box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+            }
+          }
+        }
+
+        .remember-me {
+          margin-bottom: 20px;
+          padding-left: 5px;
+          
+          .at-checkbox {
+            .at-checkbox__option {
+              .at-checkbox__option-wrap {
+                font-size: 14px;
+              }
+            }
+          }
+        }
+      }
+
+      .login-btn, .signup-btn {
+        width: 100%;
+        height: 50px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 500;
+        margin-top: 10px;
+        
+        &:not(.at-button--loading):hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+        }
+        
+        &.at-button--loading {
+          background: #40a9ff !important;
+        }
+      }
+
+      .at-divider {
+        margin: 30px 0;
+      }
+
+      .switch-mode {
+        text-align: center;
+        
+        .switch-text {
+          color: #666;
+          font-size: 14px;
+        }
+        
+        .switch-link {
+          color: #1890ff;
+          font-size: 14px;
+          margin-left: 5px;
+          cursor: pointer;
+          
+          &:hover {
+            color: #40a9ff;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    .other-login {
+      margin-bottom: 30px;
+      
+      .other-title {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        display: block;
+        margin-bottom: 20px;
+        position: relative;
+        
+        &::before,
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          width: 80px;
+          height: 1px;
+          background: #e8e8e8;
+        }
+        
+        &::before {
+          left: 50px;
+        }
+        
+        &::after {
+          right: 50px;
+        }
+      }
+
+      .other-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+
+        .wechat-btn {
+          background: #07c160;
+          color: white;
+          border: none;
+          padding: 12px 24px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px;
+          
+          &:hover {
+            background: #06ad56;
+            transform: translateY(-1px);
+          }
+        }
+      }
+    }
+
+    .footer {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid #e8e8e8;
+      
+      .footer-text {
+        color: #999;
+        font-size: 12px;
+      }
+      
+      .footer-link {
+        color: #1890ff;
+        font-size: 12px;
+        margin: 0 2px;
+        cursor: pointer;
+        
+        &:hover {
+          color: #40a9ff;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .login {
+    padding: 20px 15px;
+    
+    .login-container {
+      padding: 20px;
+      margin: 0;
+      
+      .header {
+        margin-bottom: 30px;
+        
+        .app-title {
+          font-size: 24px;
+        }
+        
+        .app-subtitle {
+          font-size: 14px;
+        }
+      }
+      
+      .other-login {
+        .other-title {
+          &::before,
+          &::after {
+            width: 40px;
+          }
+          
+          &::before {
+            left: 30px;
+          }
+          
+          &::after {
+            right: 30px;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* 暗色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .login {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    
+    .login-container {
+      background: rgba(30, 30, 30, 0.95);
+      
+      .header {
+        .app-title {
+          color: white;
+        }
+        
+        .app-subtitle {
+          color: #ccc;
+        }
+      }
+      
+      .login-card, .signup-card {
+        .at-form {
+          .at-input {
+            .at-input__container {
+              background: #2a2a2a;
+              border-color: #444;
+              color: white;
+              
+              .at-input__input {
+                color: white;
+              }
+            }
+          }
+        }
+        
+        .switch-mode {
+          .switch-text {
+            color: #ccc;
+          }
+        }
+      }
+      
+      .footer {
+        border-color: #444;
+        
+        .footer-text {
+          color: #999;
+        }
+      }
+    }
+  }
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-container {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* 输入框聚焦动画 */
+.at-input__container {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 按钮点击效果 */
+.at-button {
+  transition: all 0.2s ease;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Toast 样式优化 */
+.at-toast {
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.8) !important;
+}
