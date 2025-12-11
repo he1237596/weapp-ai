@@ -10,7 +10,9 @@ import {
   AtToast,
   AtDivider,
   AtCheckbox,
-  AtCheckboxOption
+  AtCheckboxOption,
+  AtAvatar,
+  AtBadge
 } from 'taro-ui'
 import { useStore } from '../../store/useStore'
 import './index.scss'
@@ -193,150 +195,215 @@ const Login = () => {
 
   return (
     <View className='login'>
+      {/* 背景装饰 */}
+      <View className='bg-decoration'>
+        <View className='bg-circle bg-circle-1'></View>
+        <View className='bg-circle bg-circle-2'></View>
+        <View className='bg-circle bg-circle-3'></View>
+      </View>
+
       <View className='login-container'>
         {/* Logo 和标题 */}
         <View className='header'>
-          <View className='logo'>
-            <AtIcon value='bookmark' size='48' color='#1890ff' />
+          <View className='logo-container'>
+            <View className='logo'>
+              <AtIcon value='bookmark' size='64' color='white' />
+            </View>
+            <View className='logo-glow'></View>
           </View>
           <Text className='app-title'>婚礼策划助手</Text>
           <Text className='app-subtitle'>
-            {isSignUp ? '创建新账户' : '欢迎回来'}
+            {isSignUp ? '开启您的婚礼之旅' : '欢迎回来，继续规划'}
           </Text>
+          <View className='feature-badges'>
+            <View className='badge'>
+              <AtIcon value='calendar' size='16' color='#52c41a' />
+              <Text>智能规划</Text>
+            </View>
+            <View className='badge'>
+              <AtIcon value='tag' size='16' color='#fa8c16' />
+              <Text>预算管理</Text>
+            </View>
+            <View className='badge'>
+              <AtIcon value='users' size='16' color='#1890ff' />
+              <Text>团队协作</Text>
+            </View>
+          </View>
         </View>
 
         {/* 登录表单 */}
-        {!isSignUp ? (
-          <AtCard className='login-card'>
-            <AtForm>
-              <AtInput
-                name='email'
-                title='邮箱'
-                type='text'
-                placeholder='请输入邮箱'
-                value={formData.email}
-                onChange={(value) => handleInputChange('email', value)}
-                clear
-                maxLength={50}
-              />
-              
-              <AtInput
-                name='password'
-                title='密码'
-                type='password'
-                placeholder='请输入密码'
-                value={formData.password}
-                onChange={(value) => handleInputChange('password', value)}
-                clear
-                maxLength={20}
-              />
-
-              <View className='remember-me'>
-                <AtCheckbox
-                  options={[{
-                    value: 'remember',
-                    label: '记住我'
-                  }]}
-                  selectedList={formData.rememberMe ? ['remember'] : []}
-                  onChange={(value) => handleInputChange('rememberMe', value.includes('remember'))}
-                />
+        <View className={`form-container ${isSignUp ? 'signup' : 'login'}`}>
+          {!isSignUp ? (
+            <View className='login-form'>
+              <View className='form-header'>
+                <Text className='form-title'>登录账户</Text>
+                <Text className='form-subtitle'>继续您的婚礼规划之旅</Text>
               </View>
+              
+              <AtForm>
+                <View className='input-group'>
+                  <AtInput
+                    name='email'
+                    title='邮箱'
+                    type='text'
+                    placeholder='请输入您的邮箱地址'
+                    value={formData.email}
+                    onChange={(value) => handleInputChange('email', value)}
+                    clear
+                    maxLength={50}
+                    className='custom-input'
+                  />
+                </View>
+                
+                <View className='input-group'>
+                  <AtInput
+                    name='password'
+                    title='密码'
+                    type='password'
+                    placeholder='请输入您的密码'
+                    value={formData.password}
+                    onChange={(value) => handleInputChange('password', value)}
+                    clear
+                    maxLength={20}
+                    className='custom-input'
+                  />
+                </View>
 
-              <AtButton 
-                type='primary' 
-                className='login-btn'
-                loading={loading}
-                disabled={loading}
-                onClick={handleLogin}
-              >
-                {loading ? '登录中...' : '登录'}
-              </AtButton>
-            </AtForm>
+                <View className='form-options'>
+                  <View className='remember-me'>
+                    <AtCheckbox
+                      options={[{
+                        value: 'remember',
+                        label: '记住登录状态'
+                      }]}
+                      selectedList={formData.rememberMe ? ['remember'] : []}
+                      onChange={(value) => handleInputChange('rememberMe', value.includes('remember'))}
+                    />
+                  </View>
+                  <Text className='forgot-password'>忘记密码？</Text>
+                </View>
 
-            <AtDivider content='或' />
+                <AtButton 
+                  type='primary' 
+                  className='login-btn'
+                  loading={loading}
+                  disabled={loading}
+                  onClick={handleLogin}
+                  size='large'
+                >
+                  <Text className='btn-text'>
+                    {loading ? '正在登录...' : '登录'}
+                  </Text>
+                  <AtIcon value='arrow-right' size='18' color='white' />
+                </AtButton>
+              </AtForm>
 
-            <View className='switch-mode'>
-              <Text className='switch-text'>还没有账户？</Text>
-              <Text 
-                className='switch-link' 
-                onClick={toggleSignUp}
-              >
-                立即注册
-              </Text>
+              <AtDivider content='' className='custom-divider' />
+
+              <View className='switch-mode'>
+                <Text className='switch-text'>还没有账户？</Text>
+                <Text 
+                  className='switch-link' 
+                  onClick={toggleSignUp}
+                >
+                  立即注册
+                </Text>
+              </View>
             </View>
-          </AtCard>
-        ) : (
-          /* 注册表单 */
-          <AtCard className='signup-card'>
-            <AtForm>
-              <AtInput
-                name='nickname'
-                title='昵称'
-                type='text'
-                placeholder='请输入昵称'
-                value={signUpData.nickname}
-                onChange={(value) => handleSignUpChange('nickname', value)}
-                clear
-                maxLength={20}
-              />
+          ) : (
+            /* 注册表单 */
+            <View className='signup-form'>
+              <View className='form-header'>
+                <Text className='form-title'>创建账户</Text>
+                <Text className='form-subtitle'>开始您的婚礼规划之旅</Text>
+              </View>
               
-              <AtInput
-                name='email'
-                title='邮箱'
-                type='text'
-                placeholder='请输入邮箱'
-                value={signUpData.email}
-                onChange={(value) => handleSignUpChange('email', value)}
-                clear
-                maxLength={50}
-              />
-              
-              <AtInput
-                name='password'
-                title='密码'
-                type='password'
-                placeholder='请输入密码（至少6位）'
-                value={signUpData.password}
-                onChange={(value) => handleSignUpChange('password', value)}
-                clear
-                maxLength={20}
-              />
-              
-              <AtInput
-                name='confirmPassword'
-                title='确认密码'
-                type='password'
-                placeholder='请再次输入密码'
-                value={signUpData.confirmPassword}
-                onChange={(value) => handleSignUpChange('confirmPassword', value)}
-                clear
-                maxLength={20}
-              />
+              <AtForm>
+                <View className='input-group'>
+                  <AtInput
+                    name='nickname'
+                    title='昵称'
+                    type='text'
+                    placeholder='请输入您的昵称'
+                    value={signUpData.nickname}
+                    onChange={(value) => handleSignUpChange('nickname', value)}
+                    clear
+                    maxLength={20}
+                    className='custom-input'
+                  />
+                </View>
+                
+                <View className='input-group'>
+                  <AtInput
+                    name='email'
+                    title='邮箱'
+                    type='text'
+                    placeholder='请输入您的邮箱地址'
+                    value={signUpData.email}
+                    onChange={(value) => handleSignUpChange('email', value)}
+                    clear
+                    maxLength={50}
+                    className='custom-input'
+                  />
+                </View>
+                
+                <View className='input-group'>
+                  <AtInput
+                    name='password'
+                    title='密码'
+                    type='password'
+                    placeholder='请输入密码（至少6位）'
+                    value={signUpData.password}
+                    onChange={(value) => handleSignUpChange('password', value)}
+                    clear
+                    maxLength={20}
+                    className='custom-input'
+                  />
+                </View>
+                
+                <View className='input-group'>
+                  <AtInput
+                    name='confirmPassword'
+                    title='确认密码'
+                    type='password'
+                    placeholder='请再次输入密码'
+                    value={signUpData.confirmPassword}
+                    onChange={(value) => handleSignUpChange('confirmPassword', value)}
+                    clear
+                    maxLength={20}
+                    className='custom-input'
+                  />
+                </View>
 
-              <AtButton 
-                type='primary' 
-                className='signup-btn'
-                loading={loading}
-                disabled={loading}
-                onClick={handleSignUp}
-              >
-                {loading ? '注册中...' : '注册'}
-              </AtButton>
-            </AtForm>
+                <AtButton 
+                  type='primary' 
+                  className='signup-btn'
+                  loading={loading}
+                  disabled={loading}
+                  onClick={handleSignUp}
+                  size='large'
+                >
+                  <Text className='btn-text'>
+                    {loading ? '正在注册...' : '注册'}
+                  </Text>
+                  <AtIcon value='check' size='18' color='white' />
+                </AtButton>
+              </AtForm>
 
-            <AtDivider content='或' />
+              <AtDivider content='' className='custom-divider' />
 
-            <View className='switch-mode'>
-              <Text className='switch-text'>已有账户？</Text>
-              <Text 
-                className='switch-link' 
-                onClick={toggleSignUp}
-              >
-                立即登录
-              </Text>
+              <View className='switch-mode'>
+                <Text className='switch-text'>已有账户？</Text>
+                <Text 
+                  className='switch-link' 
+                  onClick={toggleSignUp}
+                >
+                  立即登录
+                </Text>
+              </View>
             </View>
-          </AtCard>
-        )}
+          )}
+        </View>
 
         {/* 其他登录方式 */}
         <View className='other-login'>

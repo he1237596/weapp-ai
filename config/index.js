@@ -44,6 +44,18 @@ const config = {
           generateScopedName: '[name]__[local]___[hash:base64:5]'
         }
       }
+    },
+    webpackChain(chain) {
+      if (process.env.TARO_ENV === 'weapp') {
+        // 在小程序中排除 Supabase 相关模块
+        chain.externals({
+          '@supabase/supabase-js': 'null',
+          '@supabase/auth-js': 'null',
+          '@supabase/storage-js': 'null',
+          '@supabase/realtime-js': 'null',
+          '@supabase/functions-js': 'null'
+        })
+      }
     }
   },
   h5: {

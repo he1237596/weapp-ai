@@ -35,7 +35,6 @@ export async function copyToClipboard(text) {
       icon: 'success'
     });
   } catch (error) {
-    console.error('复制失败:', error);
     Taro.showToast({
       title: '复制失败',
       icon: 'none'

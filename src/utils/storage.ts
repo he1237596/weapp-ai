@@ -17,7 +17,7 @@ export class StorageUtil {
         data: JSON.stringify(data)
       });
     } catch (error) {
-      console.error('Storage set error:', error);
+      console.error('Storage remove error:', error);
       throw error;
     }
   }
@@ -47,7 +47,7 @@ export class StorageUtil {
     try {
       await Taro.clearStorage();
     } catch (error) {
-      console.error('Storage clear error:', error);
+      console.error('Storage remove error:', error);
       throw error;
     }
   }

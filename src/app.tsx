@@ -7,7 +7,7 @@ import Taro from '@tarojs/taro'
 import { useStore } from './store/useStore'
 
 const App = (props: { children?: React.ReactNode }) => {
-  const { loadUser, setupRealtime } = useStore()
+  const { user } = useStore()
 
   useEffect(() => {
     // 初始化 Taro
@@ -15,16 +15,11 @@ const App = (props: { children?: React.ReactNode }) => {
       designWidth: 750
     })
 
-    // 尝试加载当前用户
+    // 应用初始化逻辑
     const initializeApp = async () => {
       try {
-        await loadUser()
-        
-        // 如果用户已登录，设置实时同步
-        const { user } = useStore.getState()
-        if (user) {
-          setupRealtime()
-        }
+        // 这里可以添加初始化逻辑，比如检查登录状态等
+        console.log('应用初始化完成')
       } catch (error) {
         console.error('应用初始化失败:', error)
       }
@@ -32,6 +27,13 @@ const App = (props: { children?: React.ReactNode }) => {
 
     initializeApp()
   }, [])
+
+  useEffect(() => {
+    // 如果用户已登录，可以在这里处理用户相关的逻辑
+    if (user) {
+      console.log('用户已登录:', user.name)
+    }
+  }, [user])
 
   useEffect(() => {
     // 监听应用显示/隐藏
