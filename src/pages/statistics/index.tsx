@@ -3,6 +3,7 @@ import { View, Text, ScrollView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useAuth } from '../../context/AuthContext'
 import { useStore } from '../../store/useStore'
+import { apiService } from '../../services/api'
 import { getExpenseCategoryLabel, formatMoney } from '../../utils/common'
 import { 
   AtCard,
@@ -40,8 +41,7 @@ const Statistics = () => {
   const { 
     events, 
     expenses,
-    loading: storeLoading,
-    loadExpenses
+    loading: storeLoading
   } = useStore()
 
   const [loading, setLoading] = useState(true)
@@ -76,7 +76,7 @@ const Statistics = () => {
       
       // 加载所有事件的支出数据
       const expensePromises = events.map(event => 
-        loadExpenses(event.id).catch(error => {
+        apiService.loadExpenses(event.id).catch(error => {
           console.error(`加载事件 ${event.id} 支出失败:`, error)
           return null
         })
